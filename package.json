@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
     "@types/ms": "^0.7.32",
@@ -15,7 +17,6 @@
     "@types/react-dom": "18.3.0",
     "@vercel/postgres": "0.9.0",
     "autoprefixer": "10.4.16",
-    "drizzle-kit": "0.23.2",
     "drizzle-orm": "0.32.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
@@ -26,5 +27,8 @@
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.3",
     "typescript": "^5"
+  },
+  "devDependencies": {
+    "drizzle-kit": "0.23.2"
   }
 }
