@@ -2,6 +2,7 @@ import {
   numeric,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uuid,
@@ -52,6 +53,29 @@ export const PartOrderTable = pgTable("partOrder", {
     .notNull(),
 });
 
+export const ProductTable = pgTable("product", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 255 }).notNull(),
+  imageUrl: varchar("imageUrl", { length: 255 }).notNull(),
+});
+
+export const ProductPartTable = pgTable(
+  "productPart",
+  {
+    partId: uuid("partId")
+      .references(() => PartTable.id)
+      .notNull(),
+    productId: uuid("productId")
+      .references(() => ProductTable.id)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.productId, table.partId] }),
+    };
+  }
+);
+
 // Relations
 export const userRelations = relations(UsersTable, ({ many }) => ({
   orders: many(OrderTable),
@@ -65,6 +89,7 @@ export const orderRelations = relations(OrderTable, ({ one, many }) => ({
 }));
 export const partRelations = relations(PartTable, ({ many }) => ({
   partOrder: many(PartOrderTable),
+  productPart: many(ProductPartTable),
 }));
 export const partOrderRelations = relations(PartOrderTable, ({ one }) => ({
   order: one(OrderTable, {
@@ -73,6 +98,19 @@ export const partOrderRelations = relations(PartOrderTable, ({ one }) => ({
   }),
   part: one(PartTable, {
     fields: [PartOrderTable.partId],
+    references: [PartTable.id],
+  }),
+}));
+export const productRelations = relations(ProductTable, ({ many }) => ({
+  productParts: many(ProductPartTable),
+}));
+export const productPartRelations = relations(ProductPartTable, ({ one }) => ({
+  product: one(ProductTable, {
+    fields: [ProductPartTable.productId],
+    references: [ProductTable.id],
+  }),
+  part: one(PartTable, {
+    fields: [ProductPartTable.partId],
     references: [PartTable.id],
   }),
 }));
