@@ -4,18 +4,17 @@ import {
   pgEnum,
   pgTable,
   primaryKey,
-  text,
   timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 import { InferSelectModel, InferInsertModel, relations } from "drizzle-orm";
 
-export const UsersTable = pgTable("users", {
+export const UserTable = pgTable("user", {
   id: uuid("id").primaryKey().defaultRandom(),
-  name: text("name").notNull(),
-  email: text("email").unique().notNull(),
-  image: text("image").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).unique().notNull(),
+  image: varchar("image_url", { length: 255 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -28,23 +27,23 @@ export const OrderStatus = pgEnum("orderStatus", [
 
 export const OrderTable = pgTable("order", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("userId")
-    .references(() => UsersTable.id)
+  userId: uuid("user_id")
+    .references(() => UserTable.id)
     .notNull(),
   amount: numeric("amount").notNull(),
   status: OrderStatus("status").default("draft").notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
-  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
 });
 
 export const OrderPartOptionTable = pgTable(
-  "orderPartOption",
+  "order_part_option",
   {
-    orderId: uuid("orderId")
+    orderId: uuid("order_id")
       .references(() => OrderTable.id)
       .notNull(),
-    partOptionId: uuid("partOptionId")
+    partOptionId: uuid("partOption_id")
       .references(() => PartOptionTable.id)
       .notNull(),
   },
@@ -58,34 +57,40 @@ export const OrderPartOptionTable = pgTable(
 export const PartTable = pgTable("part", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
-  description: varchar("description", { length: 255 }).notNull(),
+  description: varchar("description", { length: 255 }),
   category: varchar("category", { length: 255 }).notNull(), // TODO use enum or move to a new table
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const PartOptionTable = pgTable("partOption", {
+export const PartOptionTable = pgTable("part_option", {
   id: uuid("id").primaryKey().defaultRandom(),
-  partId: uuid("partId")
+  partId: uuid("part_id")
     .references(() => PartTable.id)
     .notNull(),
   name: varchar("name", { length: 255 }).notNull(),
   price: numeric("price").notNull(),
   stock: boolean("stock").default(false),
-  stockNumber: numeric("stockNumber").default("0"),
+  stockNumber: numeric("stock_number").default("0"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const ProductTable = pgTable("product", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
-  imageUrl: varchar("imageUrl", { length: 255 }).notNull(),
+  image: varchar("image_url", { length: 255 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const ProductPartOptionTable = pgTable(
-  "productPartOption",
+  "product_part_option",
   {
-    partOptionId: uuid("partOptionId")
+    partOptionId: uuid("part_option_id")
       .references(() => PartOptionTable.id)
       .notNull(),
-    productId: uuid("productId")
+    productId: uuid("product_id")
       .references(() => ProductTable.id)
       .notNull(),
   },
@@ -97,13 +102,13 @@ export const ProductPartOptionTable = pgTable(
 );
 
 // Relations
-export const userRelations = relations(UsersTable, ({ many }) => ({
+export const userRelations = relations(UserTable, ({ many }) => ({
   orders: many(OrderTable),
 }));
 export const orderRelations = relations(OrderTable, ({ one, many }) => ({
-  userId: one(UsersTable, {
+  userId: one(UserTable, {
     fields: [OrderTable.userId],
-    references: [UsersTable.id],
+    references: [UserTable.id],
   }),
   orderPartOption: many(OrderPartOptionTable),
 }));
@@ -152,8 +157,8 @@ export const productPartOptionRelations = relations(
 );
 
 // Types
-export type User = InferSelectModel<typeof UsersTable>;
-export type NewUser = InferInsertModel<typeof UsersTable>;
+export type User = InferSelectModel<typeof UserTable>;
+export type NewUser = InferInsertModel<typeof UserTable>;
 export type Part = InferSelectModel<typeof PartTable>;
 export type NewPart = InferInsertModel<typeof PartTable>;
 export type Order = InferSelectModel<typeof OrderTable>;
