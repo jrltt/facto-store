@@ -1,4 +1,5 @@
 import {
+  boolean,
   numeric,
   pgEnum,
   pgTable,
@@ -24,6 +25,7 @@ export const OrderStatus = pgEnum("orderStatus", [
   "progress",
   "done",
 ]);
+
 export const OrderTable = pgTable("order", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("userId")
@@ -43,6 +45,17 @@ export const PartTable = pgTable("part", {
   category: varchar("category", { length: 255 }).notNull(), // TODO use enum or move to a new table
 });
 
+export const PartOptionTable = pgTable("partOption", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  partId: uuid("partId")
+    .references(() => PartTable.id)
+    .notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  price: numeric("price").notNull(),
+  stock: boolean("stock").default(false),
+  stockNumber: numeric("stockNumber").default("0"),
+});
+
 export const PartOrderTable = pgTable("partOrder", {
   id: uuid("id").primaryKey().defaultRandom(),
   partId: uuid("partId")
@@ -59,11 +72,11 @@ export const ProductTable = pgTable("product", {
   imageUrl: varchar("imageUrl", { length: 255 }).notNull(),
 });
 
-export const ProductPartTable = pgTable(
-  "productPart",
+export const ProductPartOptionTable = pgTable(
+  "productPartOption",
   {
-    partId: uuid("partId")
-      .references(() => PartTable.id)
+    partOptionId: uuid("partOptionId")
+      .references(() => PartOptionTable.id)
       .notNull(),
     productId: uuid("productId")
       .references(() => ProductTable.id)
@@ -71,7 +84,7 @@ export const ProductPartTable = pgTable(
   },
   (table) => {
     return {
-      pk: primaryKey({ columns: [table.productId, table.partId] }),
+      pk: primaryKey({ columns: [table.productId, table.partOptionId] }),
     };
   }
 );
@@ -89,7 +102,13 @@ export const orderRelations = relations(OrderTable, ({ one, many }) => ({
 }));
 export const partRelations = relations(PartTable, ({ many }) => ({
   partOrder: many(PartOrderTable),
-  productPart: many(ProductPartTable),
+  partOption: many(PartOptionTable),
+}));
+export const partOptionRelations = relations(PartOptionTable, ({ one }) => ({
+  part: one(PartTable, {
+    fields: [PartOptionTable.partId],
+    references: [PartTable.id],
+  }),
 }));
 export const partOrderRelations = relations(PartOrderTable, ({ one }) => ({
   order: one(OrderTable, {
@@ -102,18 +121,21 @@ export const partOrderRelations = relations(PartOrderTable, ({ one }) => ({
   }),
 }));
 export const productRelations = relations(ProductTable, ({ many }) => ({
-  productParts: many(ProductPartTable),
+  productPartOption: many(ProductPartOptionTable),
 }));
-export const productPartRelations = relations(ProductPartTable, ({ one }) => ({
-  product: one(ProductTable, {
-    fields: [ProductPartTable.productId],
-    references: [ProductTable.id],
-  }),
-  part: one(PartTable, {
-    fields: [ProductPartTable.partId],
-    references: [PartTable.id],
-  }),
-}));
+export const productPartOptionRelations = relations(
+  ProductPartOptionTable,
+  ({ one }) => ({
+    product: one(ProductTable, {
+      fields: [ProductPartOptionTable.productId],
+      references: [ProductTable.id],
+    }),
+    partOption: one(PartOptionTable, {
+      fields: [ProductPartOptionTable.partOptionId],
+      references: [PartOptionTable.id],
+    }),
+  })
+);
 
 // Types
 export type User = InferSelectModel<typeof UsersTable>;
