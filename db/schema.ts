@@ -38,6 +38,23 @@ export const OrderTable = pgTable("order", {
   completedAt: timestamp("completedAt"),
 });
 
+export const OrderPartOptionTable = pgTable(
+  "orderPartOption",
+  {
+    orderId: uuid("orderId")
+      .references(() => OrderTable.id)
+      .notNull(),
+    partOptionId: uuid("partOptionId")
+      .references(() => PartOptionTable.id)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.orderId, table.partOptionId] }),
+    };
+  }
+);
+
 export const PartTable = pgTable("part", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
@@ -54,16 +71,6 @@ export const PartOptionTable = pgTable("partOption", {
   price: numeric("price").notNull(),
   stock: boolean("stock").default(false),
   stockNumber: numeric("stockNumber").default("0"),
-});
-
-export const PartOrderTable = pgTable("partOrder", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  partId: uuid("partId")
-    .references(() => PartTable.id)
-    .notNull(),
-  orderId: uuid("orderId")
-    .references(() => OrderTable.id)
-    .notNull(),
 });
 
 export const ProductTable = pgTable("product", {
@@ -98,28 +105,35 @@ export const orderRelations = relations(OrderTable, ({ one, many }) => ({
     fields: [OrderTable.userId],
     references: [UsersTable.id],
   }),
-  partOrder: many(PartOrderTable),
+  orderPartOption: many(OrderPartOptionTable),
 }));
 export const partRelations = relations(PartTable, ({ many }) => ({
-  partOrder: many(PartOrderTable),
   partOption: many(PartOptionTable),
 }));
-export const partOptionRelations = relations(PartOptionTable, ({ one }) => ({
-  part: one(PartTable, {
-    fields: [PartOptionTable.partId],
-    references: [PartTable.id],
-  }),
-}));
-export const partOrderRelations = relations(PartOrderTable, ({ one }) => ({
-  order: one(OrderTable, {
-    fields: [PartOrderTable.orderId],
-    references: [OrderTable.id],
-  }),
-  part: one(PartTable, {
-    fields: [PartOrderTable.partId],
-    references: [PartTable.id],
-  }),
-}));
+export const partOptionRelations = relations(
+  PartOptionTable,
+  ({ one, many }) => ({
+    part: one(PartTable, {
+      fields: [PartOptionTable.partId],
+      references: [PartTable.id],
+    }),
+    order: many(OrderPartOptionTable),
+  })
+);
+
+export const orderPartOptionRelations = relations(
+  OrderPartOptionTable,
+  ({ one }) => ({
+    order: one(OrderTable, {
+      fields: [OrderPartOptionTable.orderId],
+      references: [OrderTable.id],
+    }),
+    part: one(PartOptionTable, {
+      fields: [OrderPartOptionTable.partOptionId],
+      references: [PartOptionTable.id],
+    }),
+  })
+);
 export const productRelations = relations(ProductTable, ({ many }) => ({
   productPartOption: many(ProductPartOptionTable),
 }));
