@@ -107,7 +107,7 @@ export const ProductTable = pgTable("product", {
   image: varchar("image_url", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  type: ProductType("type"),
+  productType: ProductType("product_type"),
 });
 
 export const ProductPartOptionTable = pgTable(
