@@ -94,12 +94,20 @@ export const VariationRulesTable = pgTable("variation_rules", {
   ruleValue: varchar("name", { length: 255 }),
 });
 
+export const ProductType = pgEnum("product_type", [
+  "bicycles",
+  "skis",
+  "surfboards",
+  "roller skates",
+]);
+
 export const ProductTable = pgTable("product", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
   image: varchar("image_url", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  type: ProductType("type"),
 });
 
 export const ProductPartOptionTable = pgTable(
