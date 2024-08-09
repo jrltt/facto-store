@@ -18,7 +18,7 @@ export const UserTable = pgTable("user", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
-export const OrderStatus = pgEnum("orderStatus", [
+export const OrderStatus = pgEnum("order_status", [
   "draft",
   "pending",
   "progress",
@@ -76,6 +76,24 @@ export const PartOptionTable = pgTable("part_option", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const RuleTypes = pgEnum("rule_types", [
+  "increase",
+  "decrease",
+  "incompatible",
+]);
+
+export const VariationRulesTable = pgTable("variation_rules", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  partOptionPrimary: uuid("part_option_primary")
+    .references(() => PartOptionTable.id)
+    .notNull(),
+  partOptionSecondary: uuid("part_option_secondary")
+    .references(() => PartOptionTable.id)
+    .notNull(),
+  ruleType: RuleTypes("rule_type"),
+  ruleValue: varchar("name", { length: 255 }),
+});
+
 export const ProductTable = pgTable("product", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
@@ -123,9 +141,9 @@ export const partOptionRelations = relations(
       references: [PartTable.id],
     }),
     order: many(OrderPartOptionTable),
+    variationsRules: many(VariationRulesTable),
   })
 );
-
 export const orderPartOptionRelations = relations(
   OrderPartOptionTable,
   ({ one }) => ({
@@ -151,6 +169,19 @@ export const productPartOptionRelations = relations(
     }),
     partOption: one(PartOptionTable, {
       fields: [ProductPartOptionTable.partOptionId],
+      references: [PartOptionTable.id],
+    }),
+  })
+);
+export const variationRulesRelations = relations(
+  VariationRulesTable,
+  ({ one }) => ({
+    primary: one(PartOptionTable, {
+      fields: [VariationRulesTable.partOptionPrimary],
+      references: [PartOptionTable.id],
+    }),
+    secondary: one(PartOptionTable, {
+      fields: [VariationRulesTable.partOptionSecondary],
       references: [PartOptionTable.id],
     }),
   })
