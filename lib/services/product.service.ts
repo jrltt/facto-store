@@ -5,14 +5,12 @@ export async function getAllBicycle() {
 }
 
 export async function getFullBicycle(id: string) {
-  if (!id) {
-    throw new Error("Bicycle ID can not be null");
-  }
+  if (!id) throw new Error("Bicycle ID can not be null");
 
   return await db.query.ProductTable.findFirst({
     where: (products, { eq }) => eq(products.id, id),
     with: {
-      productParts: true,
+      productPartOption: true,
     },
   });
 }
