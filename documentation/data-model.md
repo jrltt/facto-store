@@ -2,7 +2,8 @@
 
 ## Overview
 
-[diagram](./assets/diagram.png)
+![diagram](./assets/diagram.png "Data model diagram")
+
 
 The data model is designed to support a product configuration and order management system. It primarily revolves around users, products, orders, and the customizable parts of those products. The model is relational, ensuring data integrity and efficient querying.
 
