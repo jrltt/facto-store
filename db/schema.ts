@@ -43,13 +43,13 @@ export const OrderPartOptionTable = pgTable(
     orderId: uuid("order_id")
       .references(() => OrderTable.id)
       .notNull(),
-    partOptionId: uuid("partOption_id")
+    partOptionId2: uuid("part_option_id")
       .references(() => PartOptionTable.id)
       .notNull(),
   },
   (table) => {
     return {
-      pk: primaryKey({ columns: [table.orderId, table.partOptionId] }),
+      pk: primaryKey({ columns: [table.orderId, table.partOptionId2] }),
     };
   }
 );
@@ -90,8 +90,8 @@ export const VariationRulesTable = pgTable("variation_rules", {
   partOptionSecondary: uuid("part_option_secondary")
     .references(() => PartOptionTable.id)
     .notNull(),
-  ruleType: RuleTypes("rule_type"),
-  ruleValue: varchar("name", { length: 255 }),
+  type: RuleTypes("type"),
+  ruleValue: varchar("rule_value", { length: 255 }), // Updated the field name for clarity
 });
 
 export const ProductType = pgEnum("product_type", [
@@ -105,6 +105,7 @@ export const ProductTable = pgTable("product", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
   image: varchar("image_url", { length: 255 }).notNull(),
+  description: varchar("description", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   productType: ProductType("product_type"),
@@ -160,7 +161,7 @@ export const orderPartOptionRelations = relations(
       references: [OrderTable.id],
     }),
     part: one(PartOptionTable, {
-      fields: [OrderPartOptionTable.partOptionId],
+      fields: [OrderPartOptionTable.partOptionId2],
       references: [PartOptionTable.id],
     }),
   })
@@ -181,16 +182,19 @@ export const productPartOptionRelations = relations(
     }),
   })
 );
+
 export const variationRulesRelations = relations(
   VariationRulesTable,
   ({ one }) => ({
-    primary: one(PartOptionTable, {
+    primaryPartOption: one(PartOptionTable, {
       fields: [VariationRulesTable.partOptionPrimary],
       references: [PartOptionTable.id],
+      relationName: "primaryPartOptionRelation", // Ensure this is applied
     }),
-    secondary: one(PartOptionTable, {
+    secondaryPartOption: one(PartOptionTable, {
       fields: [VariationRulesTable.partOptionSecondary],
       references: [PartOptionTable.id],
+      relationName: "secondaryPartOptionRelation", // Ensure this is applied
     }),
   })
 );
@@ -202,3 +206,6 @@ export type Part = InferSelectModel<typeof PartTable>;
 export type NewPart = InferInsertModel<typeof PartTable>;
 export type Order = InferSelectModel<typeof OrderTable>;
 export type NewOrder = InferInsertModel<typeof OrderTable>;
+export type PartOption = InferSelectModel<typeof PartOptionTable>;
+export type Product = InferSelectModel<typeof ProductTable>;
+export type ProductTypes = NonNullable<Product["productType"]>;
