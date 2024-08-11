@@ -24,37 +24,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-export default async function Dashboard() {
-  return (
-    <div className="mx-auto max-w-6xl px-4 md:px-6 py-12">
-      <h1 className="flex text-xl font-bold gap-3 pb-6">
-        Dashboard <Gauge />
-      </h1>
-      <div className="flex min-h-screen w-full flex-col bg-muted/40 max-w-6xl mx-auto">
-        <div className="flex flex-1 flex-col sm:flex-row">
-          <div className="border-r bg-muted/40 p-4 sm:w-1/4 sm:border-r-0 sm:p-6">
-            <nav>
-              <ul>
-                <li>
-                  <Link href="/dashboard/products">Products</Link>
-                </li>
-                <li>
-                  <Link href="/dashboard/parts">Parts & Part options</Link>
-                </li>
-                <li>
-                  <Link href="/dashboard/users">Users</Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <FakeDashboard />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function FakeDashboard() {
+function FakeDashboard() {
   return (
     <main className="grid flex-1 items-start gap-4 p-6 sm:px-6 md:gap-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
@@ -263,5 +233,35 @@ export function FakeDashboard() {
         </CardContent>
       </Card>
     </main>
+  );
+}
+
+export default async function Dashboard() {
+  return (
+    <div className="mx-auto max-w-6xl px-4 md:px-6 py-12">
+      <h1 className="flex text-xl font-bold gap-3 pb-6">
+        Dashboard <Gauge />
+      </h1>
+      <div className="flex w-full flex-col bg-muted/40 max-w-6xl mx-auto">
+        <div className="flex flex-1 flex-col sm:flex-row">
+          <div className="border-r bg-muted/40 p-4 sm:w-1/4 sm:border-r-0 sm:p-6">
+            <nav>
+              <ul>
+                <li>
+                  <Link href="/dashboard/products">Products</Link>
+                </li>
+                <li>
+                  <Link href="/dashboard/parts">Parts & Part options</Link>
+                </li>
+                <li>
+                  <Link href="/dashboard/users">Users</Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <FakeDashboard />
+        </div>
+      </div>
+    </div>
   );
 }
