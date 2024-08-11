@@ -11,21 +11,21 @@ Application for product configuration and order management
 - [facto store](#facto-store)
   - [Live view](#live-view)
   - [Table of Contents](#table-of-contents)
-  - [Features](#features)
   - [Documentation](#documentation)
+  - [Features](#features)
   - [Installation](#installation)
   - [Stack and tools](#stack-and-tools)
-
-## Features
-
-- Browse and purchase products, and customize product parts
-- User-friendly interface with React components (prebuild componets by shadcn/ui)
-- Integration with PostgreSQL via Drizzle ORM
 
 ## Documentation
 
 - [Database and data models](./documentation/data-model.md)
 - [User actions](./documentation/user-actions.md)
+
+## Features
+
+- Browse and purchase products, and customize product parts
+- User-friendly interface with React components (prebuild components by shadcn/ui)
+- Integration with PostgreSQL via Drizzle ORM
 
 ## Installation
 
