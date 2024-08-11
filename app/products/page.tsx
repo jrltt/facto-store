@@ -2,7 +2,7 @@
 
 import { getAllBicycle } from "@/lib/services/product.service";
 import { Bike } from "lucide-react";
-import Link from "next/link";
+import ProductItem from "./components/product-item";
 
 export default async function Products() {
   const products = await getAllBicycle();
@@ -13,10 +13,12 @@ export default async function Products() {
         Products <Bike />
       </h1>
       {products.map((product) => (
-        <div key={product.id}>
-          Name: {product.name} / Detail:{" "}
-          <Link href={"/products/" + product.id}>click here</Link>
-        </div>
+        <ProductItem
+          key={product.id}
+          id={product.id}
+          name={product.name}
+          description={product?.description}
+        />
       ))}
     </>
   );
