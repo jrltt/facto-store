@@ -91,7 +91,7 @@ export const VariationRulesTable = pgTable("variation_rules", {
     .references(() => PartOptionTable.id)
     .notNull(),
   type: RuleTypes("type"),
-  ruleValue: varchar("rule_value", { length: 255 }), // Updated the field name for clarity
+  ruleValue: varchar("rule_value", { length: 255 }),
 });
 
 export const ProductType = pgEnum("product_type", [
@@ -150,7 +150,12 @@ export const partOptionRelations = relations(
       references: [PartTable.id],
     }),
     order: many(OrderPartOptionTable),
-    variationsRules: many(VariationRulesTable),
+    variationsRulesPrimary: many(VariationRulesTable, {
+      relationName: "primaryPartOptionRelation",
+    }),
+    variationsRulesSecondary: many(VariationRulesTable, {
+      relationName: "secondaryPartOptionRelation",
+    }),
   })
 );
 export const orderPartOptionRelations = relations(
@@ -189,12 +194,12 @@ export const variationRulesRelations = relations(
     primaryPartOption: one(PartOptionTable, {
       fields: [VariationRulesTable.partOptionPrimary],
       references: [PartOptionTable.id],
-      relationName: "primaryPartOptionRelation", // Ensure this is applied
+      relationName: "primaryPartOptionRelation",
     }),
     secondaryPartOption: one(PartOptionTable, {
       fields: [VariationRulesTable.partOptionSecondary],
       references: [PartOptionTable.id],
-      relationName: "secondaryPartOptionRelation", // Ensure this is applied
+      relationName: "secondaryPartOptionRelation",
     }),
   })
 );
