@@ -54,18 +54,26 @@ The "Add to Cart" button allows users to proceed with purchasing their customize
 
 ### Process Overview
 
-1. **Final Validation**:
-   - **Re-validation**: Upon clicking "Add to Cart," the system re-validates the selected options to ensure they are still in stock and compatible. This is crucial if there have been changes in stock or compatibility rules during the user's session.
-   - **Error Handling**: If any selected part option is no longer available or becomes incompatible, the system will notify the user and prompt them to make new selections.
+![Add to cart validation](./assets/add-to-cart-validation.png)
 
-2. **Persisting the Selection**:
-   - **Order Creation**: If the user doesn't already have an active order, the system creates a new order entry in the `order` table.
-   - **Saving Selections**: The system records each selected part option in the `order_part_option` table, associating these with the order ID. This ensures that the user's customizations are accurately stored and can be retrieved later.
-   - **Database Entries**: The specific part options chosen by the user are linked to the order, with each option's details (e.g., part name, price) being recorded.
+Add to Cart Action
+When a customer interacts with the product page and decides to add a product to the cart after making specific selections, the following sequence of actions occurs:
 
-3. **Cart Update**:
-   - **Cart Content Update**: The system updates the user's cart to reflect the newly added customized product, showing the product's name, selected options, and the final price.
-   - **User Feedback**: After adding the item to the cart, the UI provides immediate feedback, confirming that the item has been successfully added. The user is then typically redirected to the `/cart` page to review their selections or continue shopping.
+1. **User Selections**:
+   - The user selects various components of the product (e.g., frames, pedals, wheels) from the available options presented on the UI. Each option is associated with a specific `part_option_id` in the database.
+2. **Compatibility Check**:
+   - When the user triggers the "Add to Cart" action, the system performs a compatibility check to ensure that the selected components can work together. This involves querying the `variation_rules` table in the database.
+   - The `variation_rules` table contains rules defining which `part_option_ids` are compatible with each other. The query checks if the selected options comply with these rules.
+3. **Error Handling**:
+   - If the system finds that the selected components are incompatible, it prevents the user from adding the item to the cart. An error message is displayed on the UI, guiding the user to adjust their selections.
+4. **Adding to Cart**:
+   - If the selected components are compatible, the system proceeds to add the item to the cart. The following details are persisted in the database:
+       - Order Entry: A new record is created in the order table, capturing the user’s ID, the total amount (calculated based on the selected options), and other order-related metadata.
+       - Order-Part Association: Each selected component (with its associated `part_option_id`) is recorded in the `order_part_option` table, linking it to the newly created order.
+5. **Price Calculation**:
+   - The total price is dynamically calculated based on the prices of the selected components. This is done by summing up the prices of each `part_option_id` selected by the user. The total price is then displayed on the UI and stored in the order table when the item is added to the cart.
+6. **UI Feedback**:
+   - After successfully adding the item to the cart, the UI updates to reflect the new cart status, possibly including a confirmation message or updating the cart icon to indicate the number of items in the cart.
 
 ### Conclusion
 
