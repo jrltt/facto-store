@@ -7,14 +7,12 @@ Application for product configuration and order management
 [facto-store.vercel.app](https://facto-store.vercel.app)
 
 ## Table of Contents
-
-- [facto store](#facto-store)
-  - [Live view](#live-view)
-  - [Table of Contents](#table-of-contents)
-  - [Documentation](#documentation)
-  - [Features](#features)
-  - [Installation](#installation)
-  - [Stack and tools](#stack-and-tools)
+- [Documentation](#documentation)
+- [Features](#features)
+- [Assumptions](#assumptions)
+- [Future Improvements](#future-improvements)
+- [Installation](#installation)
+- [Stack and tools](#stack-and-tools)
 
 ## Documentation
 
@@ -26,6 +24,18 @@ Application for product configuration and order management
 - Browse and purchase products, and customize product parts
 - User-friendly interface with React components (prebuild components by shadcn/ui)
 - Integration with PostgreSQL via Drizzle ORM
+
+## Assumptions
+
+- Anonymous users (users who have not logged in) will primarily interact with the application by browsing available products and configuring them based on predefined options
+- Customization logic: The system assumes that product customization will be based on a modular structure where parts are independent entities that can be combined in various ways. The customization logic must handle dependencies between parts to prevent invalid configurations.
+
+## Future Improvements
+
+- Add test for the different use cases from unit to E2E, to ensure the quality and expect behavior of the system
+- Improve Typescript types in general, and clean up `any` types
+- Split UI components better and improve reuse them between public and private pages
+- Add authentication, to allow a better tracking of the "save for later orders" from the users
 
 ## Installation
 
