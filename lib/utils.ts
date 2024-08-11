@@ -12,3 +12,10 @@ export const timeAgo = (timestamp: Date, timeOnly?: boolean): string => {
     timeOnly ? "" : " ago"
   }`;
 };
+
+export function formatCurrency(value: number | string) {
+  return new Intl.NumberFormat("en-EN", {
+    style: "currency",
+    currency: "USD",
+  }).format(+value);
+}

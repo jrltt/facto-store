@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import { useState } from "react";
 interface CustomizeProductProps {
   product: any;
@@ -57,13 +57,6 @@ export function CustomizeProduct({ product, options }: CustomizeProductProps) {
       );
     }
     return price;
-  }
-
-  function formatCurrency(value: number | string) {
-    return new Intl.NumberFormat("en-EN", {
-      style: "currency",
-      currency: "USD",
-    }).format(+value);
   }
 
   function handleOnClickOption(event: any, option: any) {
