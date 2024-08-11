@@ -7,6 +7,11 @@
 
 The data model is designed to support a product configuration and order management system. It primarily revolves around users, products, orders, and the customizable parts of those products. The model is relational, ensuring data integrity and efficient querying.
 
+### Related files
+
+- [Schemas](../db/schema.ts)
+- [Generated SQL file](../db/0000_sleepy_vision.sql)
+
 ### Entities and Relationships
 
 1. **User**
@@ -83,3 +88,4 @@ The data model is designed to support a product configuration and order manageme
    - **Fields**:
      - `product_id`: Foreign key linking to the `product` table.
      - `part_option_id`: Foreign key linking to the `part_option` table.
+
