@@ -2,13 +2,6 @@ import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { getPartsWithOptions } from "@/lib/services/part.service";
-import {
-  Key,
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  AwaitedReactNode,
-} from "react";
 
 export default async function Customize() {
   const options = await getPartsWithOptions();
@@ -21,20 +14,11 @@ export default async function Customize() {
         <div key={part.partId}>
           <h3 className="text-lg font-semibold mb-4 ">{part.partName}</h3>
           <div className="grid grid-cols-3 gap-4">
-            {part.partOptions.map(
+            {(part.partOptions as Array<any>).map(
               (options: {
                 stock: any;
-                partOptionId: Key | null | undefined;
-                name:
-                  | string
-                  | number
-                  | bigint
-                  | boolean
-                  | ReactElement<any, string | JSXElementConstructor<any>>
-                  | Iterable<ReactNode>
-                  | Promise<AwaitedReactNode>
-                  | null
-                  | undefined;
+                partOptionId: string | null | undefined;
+                name: string;
                 price: string | number;
               }) => (
                 <button
