@@ -19,8 +19,8 @@ export function ProductsList({ products }: { products: Array<any> }) {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b bg-background px-6">
+    <div className="flex min-h-screen w-full flex-col bg-muted/40 max-w-6xl mx-auto mt-9">
+      <header className="flex h-14 items-center justify-between border-b bg-background px-6">
         <div className="flex items-center gap-4">
           <Breadcrumb>
             <BreadcrumbList>

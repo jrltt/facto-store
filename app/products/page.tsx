@@ -8,8 +8,8 @@ export default async function Products() {
   const products = await getAllBicycle();
 
   return (
-    <>
-      <h1 className="flex text-xl font-bold gap-3">
+    <div className="mx-auto max-w-6xl px-4 md:px-6 py-12">
+      <h1 className="flex text-xl font-bold gap-3 pb-6">
         Products <Bike />
       </h1>
       {products.map((product) => (
@@ -20,6 +20,6 @@ export default async function Products() {
           description={product?.description}
         />
       ))}
-    </>
+    </div>
   );
 }
