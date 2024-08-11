@@ -1,4 +1,4 @@
-import { StarIcon } from "@/components/ui/start-icon";
+import { StarIcon } from "lucide-react";
 
 export function ReviewStars() {
   return (
