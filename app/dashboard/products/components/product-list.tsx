@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/breadcrumb";
 
 export function ProductsList({ products }: { products: Array<any> }) {
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState<{ id: string }>(null);
   const handleProductSelect = (product: any) => {
     setSelectedProduct(product);
   };
