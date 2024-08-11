@@ -9,7 +9,7 @@ export default async function Products() {
 
   return (
     <>
-      <h1>
+      <h1 className="flex text-xl font-bold gap-3">
         Products <Bike />
       </h1>
       {products.map((product) => (
