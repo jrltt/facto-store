@@ -21,7 +21,7 @@ export default function Header() {
           className="flex items-center gap-2 text-lg font-semibold md:text-base w-[34px]"
         >
           <Store />
-          <span className="sr-only">My Z</span>
+          <span className="sr-only">Facto Store</span>
         </Link>
         <Link
           href="/products"
@@ -34,6 +34,12 @@ export default function Header() {
           className="text-z-blue transition-colors hover:text-dark-blue hover:underline underline-offset-8"
         >
           Customize
+        </Link>
+        <Link
+          href="/dashboard"
+          className="text-z-blue transition-colors hover:text-dark-blue hover:underline underline-offset-8"
+        >
+          Dashboard
         </Link>
       </nav>
       <Sheet>
