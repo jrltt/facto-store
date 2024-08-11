@@ -1,10 +1,8 @@
-import { BackButton } from "../components/back-button";
+import { getProductsWithPartOptions } from "@/lib/services/product.service";
+import { ProductsList } from "./components/product-list";
 
 export default async function Products() {
-  return (
-    <>
-      <h2>Products</h2>
-      <BackButton />
-    </>
-  );
+  const products = await getProductsWithPartOptions();
+
+  return <ProductsList products={products} />;
 }
